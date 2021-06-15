@@ -6,15 +6,20 @@
 
 int	main()
 {
+	/*
+	 fork() - создает дочернюю копию процесса
+	 Выводтся попарно
+	*/
 	int	id = fork();
+
+	/*
+	Для вывода нечетных записей,
+	можно использовать момент, что дочерний
+	элемент всегда будет возвращать "0"
+	*/
 	if (id != 0)
-		sleep(1);
-	printf("Current ID: %d, parent ID : %d\n",
-		getpid(), getppid());
-	int res = wait(NULL);
-	if (res == -1)
-		printf("No children to wait for.\n");
-	else
-		printf("%d finished execution.\n", res);
+		fork();
+
+	printf("Hi!");
 	return (0);
 }
