@@ -35,12 +35,6 @@ int	main()
 				kill(pid, SIGKILL);
 			}
 		} while (t > 0);
-		// kill(pid, SIGSTOP);
-		// sleep(1);
-		// kill(pid, SIGCONT);
-		// sleep(1);
-		// kill(pid, SIGKILL);
-		// wait(NULL);
 	}
 
 	return (0);
