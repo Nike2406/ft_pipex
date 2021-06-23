@@ -6,7 +6,7 @@
 #    By: prochell <prochell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/19 16:33:36 by locus2            #+#    #+#              #
-#    Updated: 2021/06/23 22:22:33 by prochell         ###   ########.fr        #
+#    Updated: 2021/06/23 22:33:58 by prochell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,12 +37,12 @@ SRCS_BNS	= ft_lstnew.c ft_lstadd_front.c \
 			ft_lstiter.c ft_lstmap.c
 
 .c.o:
-	${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} -c $< -o $@
 
 all: ${NAME}
 
 ${NAME}: ${OBJS} ${INCLUDE}
-	ar rcs ${NAME} $?
+	@ar rcs ${NAME} $?
 
 bonus: ${INCLUDE}
 	@make OBJS="${OBJS_BNS}" all
