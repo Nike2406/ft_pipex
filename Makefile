@@ -1,35 +1,35 @@
-NAME 		= libftprintf.a
-CFLAGS		= -Wall -Wextra -Werror
+NAME 		= pipex
+FLAGS		= -Wall -Wextra -Werror
+CFLAGS		= $(FLAGS) -I.
 CC			= gcc
-OBJS	 	= ${SRCS:.c=.o}
-LIBFT_OBJS	= ${LIBFT:.c=.o}
-INCLUDE 	= ./includes/ft_printf.h \
-			./libft/libft.h
+OBJS	 	= $(SRCS:%.c=%.o)
+LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
-LIBFT		=
 
-.c.o:
-	@${CC} ${CFLAGS} -c $< -o $@
+.PHONY: all clean fclean re bonus libft norm
 
-all: ${NAME}
+.o: .c
+	$(CC) $(CFLAGS) $< -o $@
 
-${NAME}: ${OBJS} $(LIBFT_OBJS) ${INCLUDE}
-	@ar rcs ${NAME} $(LIBFT_OBJS) $?
+all: libft $(NAME)
+
+${NAME}: $(OBJS) pipex.h
+	$(CC) $(OBJS) -Llibft -lft -o $(NAME)
 
 norm:
-	norminette .
+	norminette $(SRCS)
+	norminette pipex.h
+	make -C libft/ norm
 
-test_c:
-	@$(CC) test3.c $(LIBFT) $(SRCS) -I $(INCLUDE) && ./a.out | cat -e
+libft:
+	make -C libft
 
 clean:
-	@/bin/rm -f ${OBJS}
-	@/bin/rm -f ${LIBFT_OBJS}
-	@/bin/rm -f a.out
+	rm -f $(OBJS)
+	make -C libft clean
 
 fclean: clean
-	@/bin/rm -f ${NAME}
+	rm -f $(NAME)
+	rm -f libft/libft.a
 
 re: fclean all
-
-.PHONY: all clean fclean re bonus
