@@ -11,14 +11,14 @@ int	main(int argc, char **argv, char **envp)
 	// (void)argc;
 	// (void)argv;
 	char	**addr;
-	char	**cmd;
+	char **cmd;
 	int		fd_fl[2];
 	// int		fd_cmd[2];
 	int		pid1;
 	int		fd_pp[2];
 
 	i = 2;
-	if (argc < 2)
+	if (argc < 5)
 	{
 		ft_putstr("Please, add more data.");
 		return (1);
@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char **envp)
 	// ????? Check flags and other cmnds
 	while (i < argc - 1)
 	{
-		cmd[i - 2] = ft_split(argv[i], ' ');
+		cmd = ft_split(argv[i], ' ');
 		ft_putstr(cmd[i - 2]);
 		ft_putstr("\n");
 		i++;
