@@ -12,9 +12,10 @@ int	main(int argc, char **argv, char **envp)
 	// (void)argv;
 	char	**addr;
 	char	**cmd;
-	int		fd[4];
+	int		fd_fl[2];
+	// int		fd_cmd[2];
 	int		pid1;
-	int		pid2;
+	int		fd_pp[2];
 
 	i = 1;
 	if (argc < 2)
@@ -39,29 +40,65 @@ int	main(int argc, char **argv, char **envp)
 	}
 	addr = ft_split(envp[i] + 5, ':');
 
-	if (pipe(fd) < 0)
-		return (2);
+	// if (pipe(fd_cmd) < 0)
+	// 	return (2);
+	// pid1 = fork();
+	// if (pid1 < 0)
+	// 	return (3);
+	// if (pid1 == 0)
+	// {
+	// 	// Child process
+	// 	close(fd_fl[1]);
+	// 	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
+	// 	if (fd_fl[0] < 0)
+	// 		return (4);
+	// 	close(fd_fl[0]);
+	// 	dup2(fd_fl[0], STDOUT_FILENO);
+
+	// }
+
+	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
+	if (fd_fl[0] < 0)
+		return 1;
+	if (pipe(fd_pp) < 0)
+		return 1;
 	pid1 = fork();
 	if (pid1 < 0)
-		return (3);
+		return 1;
 	if (pid1 == 0)
 	{
-		// Child process
-		close(fd[1]);
-		fd[0] = open(argv[1], O_RDONLY, 0666);
-		dup2(fd[0], STDOUT_FILENO);
+		close(fd_pp[0]);
+		dup2(fd_fl[0], 0);
+		dup2(fd_pp[1], 1);
+		close(fd_pp[1]);
 
+		i = 0;
+		while (addr[i])
+		{
+			addr[i] = ft_strjoin(addr[i], "/");
+			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
+			i++;
+		}
+	}
+	else
+	{
+		fd_fl[1] = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+		close(fd_pp[1]);
+		dup2(fd_pp[0], 0);
+		dup2(fd_fl[1], 1);
+		close(fd_pp[0]);
+		i = 0;
+		while (addr[i])
+		{
+			addr[i] = ft_strjoin(addr[i], "/");
+			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
+			i++;
+		}
+		wait(NULL);
 	}
 
 
 	// Разделение путей
-	i = 0;
-	while (addr[i])
-	{
-		addr[i] = ft_strjoin(addr[i], "/");
-		execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
-		i++;
-	}
 
 	return (0);
 }
