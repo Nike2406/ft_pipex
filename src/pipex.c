@@ -4,7 +4,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	int	i;
 	char	**addr;
-	char **cmd;
+	char	**cmd;
 	int		fd_fl[2];
 	int		pid1;
 	int		fd_pp[2];
@@ -48,13 +48,6 @@ int	main(int argc, char **argv, char **envp)
 		close(fd_pp[1]);
 		i = 0;
 		cmd = ft_split(argv[2], ' ');
-		int k = 0;
-		while(cmd[k])
-		{
-			ft_putstr(cmd[k]);
-			ft_putstr("\n");
-			k++;
-		}
 		while (addr[i])
 		{
 			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
