@@ -1,4 +1,4 @@
-#include "pipex.h"
+#include "../pipex.h"
 
 // void	pipe(char **path, char **argv)
 // {
@@ -24,10 +24,11 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	// ????? Check flags and other cmnds
-	while (i < argc - 2)
+	while (i < argc - 1)
 	{
-		cmd = ft_split(argv[i], ' ');
+		cmd[i - 2] = ft_split(argv[i], ' ');
 		ft_putstr(cmd[i - 2]);
+		ft_putstr("\n");
 		i++;
 	}
 	// Поиск путей
@@ -54,7 +55,6 @@ int	main(int argc, char **argv, char **envp)
 		dup2(fd_fl[0], 0);
 		dup2(fd_pp[1], 1);
 		close(fd_pp[1]);
-
 		i = 0;
 		while (addr[i])
 		{
@@ -79,9 +79,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		wait(NULL);
 	}
-
-
-	// Разделение путей
 
 	return (0);
 }
