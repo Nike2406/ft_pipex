@@ -17,17 +17,17 @@ int	main(int argc, char **argv, char **envp)
 	int		pid1;
 	int		fd_pp[2];
 
-	i = 1;
+	i = 2;
 	if (argc < 2)
 	{
 		ft_putstr("Please, add more data.");
 		return (1);
 	}
 	// ????? Check flags and other cmnds
-	while (i < argc)
+	while (i < argc - 2)
 	{
 		cmd = ft_split(argv[i], ' ');
-		ft_putstr(cmd[i - 1]);
+		ft_putstr(cmd[i - 2]);
 		i++;
 	}
 	// Поиск путей
@@ -39,23 +39,6 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	addr = ft_split(envp[i] + 5, ':');
-
-	// if (pipe(fd_cmd) < 0)
-	// 	return (2);
-	// pid1 = fork();
-	// if (pid1 < 0)
-	// 	return (3);
-	// if (pid1 == 0)
-	// {
-	// 	// Child process
-	// 	close(fd_fl[1]);
-	// 	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
-	// 	if (fd_fl[0] < 0)
-	// 		return (4);
-	// 	close(fd_fl[0]);
-	// 	dup2(fd_fl[0], STDOUT_FILENO);
-
-	// }
 
 	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
 	if (fd_fl[0] < 0)
@@ -91,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		while (addr[i])
 		{
 			addr[i] = ft_strjoin(addr[i], "/");
-			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
+			execve(ft_strjoin(addr[i], cmd[1]), cmd, NULL);
 			i++;
 		}
 		wait(NULL);
