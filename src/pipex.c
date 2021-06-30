@@ -8,8 +8,6 @@
 int	main(int argc, char **argv, char **envp)
 {
 	int	i;
-	// (void)argc;
-	// (void)argv;
 	char	**addr;
 	char **cmd;
 	int		fd_fl[2];
