@@ -1,17 +1,11 @@
 #include "../pipex.h"
 
-// void	pipe(char **path, char **argv)
-// {
-
-// }
-
 int	main(int argc, char **argv, char **envp)
 {
 	int	i;
 	char	**addr;
 	char **cmd;
 	int		fd_fl[2];
-	// int		fd_cmd[2];
 	int		pid1;
 	int		fd_pp[2];
 
@@ -21,14 +15,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_putstr("Please, add more data.");
 		return (1);
 	}
-	// ????? Check flags and other cmnds
-	while (i < argc - 1)
-	{
-		cmd = ft_split(argv[i], ' ');
-		ft_putstr(cmd[i - 2]);
-		ft_putstr("\n");
-		i++;
-	}
+
 	// Поиск путей
 	i = 0;
 	while (envp[i])
@@ -39,6 +26,12 @@ int	main(int argc, char **argv, char **envp)
 	}
 	addr = ft_split(envp[i] + 5, ':');
 
+	i = 0;
+	while (addr[i])
+	{
+		addr[i] = ft_strjoin(addr[i], "/");
+		i++;
+	}
 	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
 	if (fd_fl[0] < 0)
 		return 1;
@@ -54,9 +47,16 @@ int	main(int argc, char **argv, char **envp)
 		dup2(fd_pp[1], 1);
 		close(fd_pp[1]);
 		i = 0;
+		cmd = ft_split(argv[2], ' ');
+		int k = 0;
+		while(cmd[k])
+		{
+			ft_putstr(cmd[k]);
+			ft_putstr("\n");
+			k++;
+		}
 		while (addr[i])
 		{
-			addr[i] = ft_strjoin(addr[i], "/");
 			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
 			i++;
 		}
@@ -69,10 +69,10 @@ int	main(int argc, char **argv, char **envp)
 		dup2(fd_fl[1], 1);
 		close(fd_pp[0]);
 		i = 0;
+		cmd = ft_split(argv[3], ' ');
 		while (addr[i])
 		{
-			addr[i] = ft_strjoin(addr[i], "/");
-			execve(ft_strjoin(addr[i], cmd[1]), cmd, NULL);
+			execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
 			i++;
 		}
 		wait(NULL);
