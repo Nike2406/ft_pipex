@@ -1,0 +1,15 @@
+a.out
+Check.pdf
+en.subject.pdf
+test.c
+/.vscode/
+test2_pid.c
+/test/
+*.o
+pipex
+*.a
+input
+output
+/.idea/
+/cmake-build-debug/
+CMakeLists.txt
