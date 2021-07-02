@@ -1,0 +1,1 @@
+ ✗ valgrind --leak-check=full --trace-children=yes ./pipex input "ls -la" "wc -l" output
