@@ -22,7 +22,7 @@ norm:
 	make -C libft/ norm
 
 libft:
-	make -C libft
+	make lib -C libft
 
 clean:
 	rm -f $(OBJS)

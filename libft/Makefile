@@ -6,7 +6,7 @@
 #    By: prochell <prochell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/19 16:33:36 by locus2            #+#    #+#              #
-#    Updated: 2021/06/23 22:33:58 by prochell         ###   ########.fr        #
+#    Updated: 2021/07/02 19:03:05 by prochell         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,20 +48,21 @@ bonus: ${INCLUDE}
 	@make OBJS="${OBJS_BNS}" all
 
 norm:
-	norminette .
+	@norminette *.c
+	@norminette *.h
 
 test: all bonus
 	@$(CC) $(CFLAGS) main.c $(NAME) && ./a.out | cat -e
 
-lib: all bonus clean
+lib: all bonus
 
 clean:
-	@/bin/rm -f ${OBJS}
-	@/bin/rm -f ${OBJS_BNS}
-	@/bin/rm -f a.out
+	@rm -f ${OBJS}
+	@rm -f ${OBJS_BNS}
+	@rm -f a.out
 
 fclean: clean
-	@/bin/rm -f ${NAME}
+	@rm -f ${NAME}
 
 re: fclean all
 
