@@ -33,8 +33,6 @@ void	child_process(char **addr, char **argv, int *fd_pp, int *fd_fl)
 	dup2(fd_pp[1], 1);
 	close(fd_pp[1]);
 	cmd = ft_split(argv[2], ' ');
-	if (cmd < 0)
-		exit(1);
 	while (addr[i])
 	{
 		execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
@@ -61,8 +59,6 @@ void	parent_process(char **addr, char **argv, int *fd_pp, int *fd_fl)
 	close(fd_pp[0]);
 	i = 0;
 	cmd = ft_split(argv[3], ' ');
-	if (cmd < 0)
-		exit(1);
 	while (addr[i])
 	{
 		execve(ft_strjoin(addr[i], cmd[0]), cmd, NULL);
@@ -79,7 +75,7 @@ void	ft_err(int	code)
 {
 	if (code == 1)
 	{
-		ft_putstr("Error with output file.\n");
+		ft_putstr("Please, add more data.\n");
 		exit(1);
 	}
 	else if (code == 2)
