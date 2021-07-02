@@ -3,8 +3,10 @@ FLAGS		= -Wall -Wextra -Werror
 CFLAGS		= $(FLAGS) -I.
 CC			= gcc
 OBJS	 	= $(SRCS:%.c=%.o)
+OBJS_BONUS 	= $(SRCS_BONUS:%.c=%.o)
 LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
+SRCS_BONUS 	= src/pipex_bonus.c
 
 .PHONY: all clean fclean re bonus libft norm
 
@@ -15,6 +17,9 @@ all: libft $(NAME)
 
 ${NAME}: $(OBJS) pipex.h
 	$(CC) $(OBJS) -Llibft -lft -o $(NAME)
+
+bonus: libft $(OBJS_BONUS) pipex.h
+	$(CC) $(OBJS_BONUS) -Llibft -lft -o $(NAME)
 
 norm:
 	norminette $(SRCS)
