@@ -106,13 +106,11 @@ void	ft_err(int	code)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		i;
 	char	**addr;
 	int		fd_fl[2];
 	int		pid1;
 	int		fd_pp[2];
 
-	i = 2;
 	if (argc < 5)
 		ft_err(1);
 	addr = path(envp);
