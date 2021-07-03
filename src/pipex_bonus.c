@@ -91,6 +91,19 @@ void	ft_err(int	code, t_pipex *s_pp)
 	}
 }
 
+void	get_pipe(t_pipex *s_pp)
+{
+	int	i;
+
+	i = 0;
+	while (i < s_pp->cmd_numb - 1)
+	{
+		if (pipe(fd_pp[i]) < 0)
+			ft_err(2, s_pp);
+		i++;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd_fl[2];
@@ -101,6 +114,7 @@ int	main(int argc, char **argv, char **envp)
 	s_pp = (t_pipex *)malloc(sizeof(t_pipex));
 	if (argc < 5)
 		ft_err(1, s_pp);
+	s_pp->cmd_numb = argc - 3;
 	s_pp->addr = path(envp);
 	fd_fl[0] = open(argv[1], O_RDONLY, 0777);
 	if (fd_fl[0] < 0)

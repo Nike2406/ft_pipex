@@ -12,6 +12,7 @@
 typedef struct s_pipex
 {
 	char	**addr;
+	int		cmd_numb;
 }	t_pipex;
 
 char	**path(char **envp);
