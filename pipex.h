@@ -12,10 +12,7 @@
 typedef struct s_pipex
 {
 	char	**addr;
-	int		cmd_numb;
 	int		pp[100][2];
-	int		pr_pp;
-	int		fd_fl[2];
 	int		argc;
 	char	**argv;
 	int		i;

@@ -19,22 +19,26 @@ char	**path(char **envp)
 		addr[i] = ft_strjoin(addr[i], "/");
 		i++;
 	}
-	// access! - проверка на доступнуость файлов access(addr[i], 0);
 	return (addr);
 }
 
 void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
 	int	i;
+	int	acss;
 
 	i = 0;
+	acss = 0;
 	while (s_pp->addr[i])
 	{
 		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
-		if (access(s_pp->cmd, 1) < 0)
-			ft_err(6);
+		acss = access(s_pp->cmd, 1);
+		if (acss >= 0)
+			return ;
 		i++;
 	}
+	if (acss == -1)
+		ft_err(6);
 }
 
 void	get_exec(t_pipex *s_pp)
@@ -52,7 +56,7 @@ void	get_exec(t_pipex *s_pp)
 		ft_err(4);
 	if (pid != 0)
 	{
-		waitpid(-1, 0, 0);
+		wait(NULL);
 		close(s_pp->pp[s_pp->i][1]);
 	}
 	else
@@ -65,57 +69,36 @@ void	get_exec(t_pipex *s_pp)
 			ft_err(7);
 		exit(1);
 	}
-	// while (s_pp->addr[i])
-	// {
-	// 	ft_putstr(ft_strjoin(s_pp->addr[i], cmd[0]));
-	// 	ft_putstr("\n");
-	// 	execve(ft_strjoin(s_pp->addr[i], cmd[0]), cmd, NULL);
-	// 	i++;
-	// }
-	// ft_putstr("Command not found!\n");
-	// exit(1);
 }
 
 void	b_child_process(t_pipex *s_pp)
 {
 	if (s_pp->i == 0)
-		dup2(s_pp->pp[0][0], 1);
+		dup2(s_pp->pp[0][0], STDIN_FILENO);
 	else if (s_pp->i < s_pp->argc - 2)
 	{
 		if (s_pp->i != 1)
 			close(s_pp->pp[s_pp->i - 1][1]);
-		dup2(s_pp->pp[s_pp->i - 1][0], 0);
+		dup2(s_pp->pp[s_pp->i - 1][0], STDIN_FILENO);
 		close(s_pp->pp[s_pp->i][0]);
-		dup2(s_pp->pp[s_pp->i][1], 1);
+		dup2(s_pp->pp[s_pp->i][1], STDOUT_FILENO);
 	}
 	else
 	{
 		close(s_pp->pp[s_pp->i - 1][1]);
-		dup2(s_pp->pp[s_pp->i - 1][0], 0);
+		dup2(s_pp->pp[s_pp->i - 1][0], STDIN_FILENO);
 		close(s_pp->pp[s_pp->i - 1][0]);
 	}
 }
 
-
-// void	b_parent_process(t_pipex *s_pp, char **argv, int *fd_fl)
-// {
-
-// 	close(fd_pp[1]);
-// 	dup2(fd_pp[0], 0);
-// 	dup2(fd_fl[1], 1);
-// 	close(fd_pp[0]);
-// 	get_exec(s_pp, argv, 3);
-// 	wait(NULL);
-// }
-
 void get_open(t_pipex *s_pp)
 {
 	s_pp->pp[0][0] = open(s_pp->argv[1], O_RDONLY, 0777);
-	if (s_pp->fd_fl[0] < 0)
+	if (s_pp->pp[0][0] < 0)
 		ft_err(2);
 	s_pp->pp[s_pp->argc - 2][1] = \
 		open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (s_pp->argv[s_pp->argc - 1] < 0)
+	if (s_pp->argv[s_pp->argc - 1][1] < 0)
 		ft_err(1);
 }
 
@@ -135,6 +118,8 @@ void	ft_err(int	code)
 		ft_putstr("Wrong command.\n");
 	else if (code == 7)
 		ft_putstr("Execute failed.\n");
+	else
+		ft_putstr("Unexpected error.\n");
 	exit(code);
 }
 
@@ -143,29 +128,21 @@ void	get_pipe(t_pipex *s_pp)
 	int	i;
 
 	i = 0;
-	// *s_pp->pp = malloc(sizeof(int *) * i);
-	// if (!*s_pp->pp)
-	// 	ft_err(5);
-	while (i < s_pp->cmd_numb + 1)
+	while (i < s_pp->argc + 1)
 	{
-		// s_pp->pp[i] = malloc(sizeof(int) * 2);
-		if (pipe(s_pp->pp[i]) < 0)
-			ft_err(2);
+		pipe(s_pp->pp[i]);
 		i++;
 	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	// int		pid;
 	t_pipex	s_pp;
-	///////////////////////
 
 	if (argc < 5)
 		ft_err(1);
 	s_pp.argc = argc;
 	s_pp.argv = argv;
-	s_pp.cmd_numb = argc - 3;
 	get_pipe(&s_pp);
 	s_pp.addr = path(envp);
 	s_pp.i = 0;
@@ -175,35 +152,5 @@ int	main(int argc, char **argv, char **envp)
 		get_exec(&s_pp);
 	close(s_pp.pp[0][0]);
 	close(s_pp.pp[argc - 2][1]);
-
-
-	///////////////////
-
-
-	// while (++s_pp.i < argc - 2)
-	// {
-	// 	get_pipe(&s_pp);
-	// 	pid = fork();
-	// 	if (pid < 0)
-	// 		ft_err(4);
-	// 	// ft_putnbr(s_pp.i);
-	// 	// ft_putchar('\n');
-	// 	if (pid == 0)
-	// 		b_child_process(&s_pp);
-	// 	else
-	// 	{
-	// 		wait(NULL);
-	// 		close(s_pp.fd_fl[1]);
-	// 	}
-	// 	// else if (pid != 0)
-	// 	// 	wait(NULL);
-	// 	// else
-	// 	// 	b_parent_process(&s_pp, argv, fd_fl);
-	// }
-	// s_pp.i = 1;
-	// while (++s_pp.i < s_pp.cmd_numb)
-	// 	wait(NULL);
-	// while (s_pp.i - 2)
-	// 	wait(NULL);
 	return (0);
 }
