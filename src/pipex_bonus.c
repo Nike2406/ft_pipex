@@ -43,7 +43,7 @@ void	get_exec(t_pipex *s_pp)
 
 void	b_child_process(t_pipex *s_pp)
 {
-	if (s_pp->i == 0)
+	if (s_pp->i == 1)
 	{
 		// close(s_pp->fd_fl[1]);
 		ft_putstr("First!\n");
@@ -68,6 +68,8 @@ void	b_child_process(t_pipex *s_pp)
 		close(s_pp->pp[s_pp->i - 1][1]);
 		close(s_pp->pp[s_pp->i][0]);
 	}
+
+	ft_putstr("Here!\n");
 	get_exec(s_pp);
 }
 
@@ -132,7 +134,7 @@ int	main(int argc, char **argv, char **envp)
 	int		pid;
 	t_pipex	s_pp;
 
-	s_pp.i = -1;
+	s_pp.i = 1;
 	if (argc < 5)
 		ft_err(1);
 	s_pp.argc = argc;
@@ -141,7 +143,7 @@ int	main(int argc, char **argv, char **envp)
 	s_pp.cmd_numb = argc - 3;
 	s_pp.addr = path(envp);
 
-	while (++s_pp.i < s_pp.cmd_numb)
+	while (++s_pp.i < argc - 2)
 	{
 		get_pipe(&s_pp);
 		pid = fork();
@@ -151,14 +153,19 @@ int	main(int argc, char **argv, char **envp)
 		// ft_putchar('\n');
 		if (pid == 0)
 			b_child_process(&s_pp);
+		else
+		{
+			wait(NULL);
+			close(s_pp.fd_fl[1]);
+		}
 		// else if (pid != 0)
 		// 	wait(NULL);
 		// else
 		// 	b_parent_process(&s_pp, argv, fd_fl);
 	}
-	s_pp.i = -1;
-	while (++s_pp.i < s_pp.cmd_numb)
-		wait(NULL);
+	// s_pp.i = 1;
+	// while (++s_pp.i < s_pp.cmd_numb)
+	// 	wait(NULL);
 	// while (s_pp.i - 2)
 	// 	wait(NULL);
 	return (0);
