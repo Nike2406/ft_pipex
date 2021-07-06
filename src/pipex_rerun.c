@@ -58,7 +58,7 @@ void	get_exec(t_pipex *s_pp)
 	else
 	{
 		b_child_process(s_pp);
-		if (s_pp->i = s_pp->argc - 3)
+		if (s_pp->i == s_pp->argc - 3)
 			dup2(s_pp->pp[s_pp->argc - 2][1], 1);
 		exc = execve(s_pp->cmd, cmd, NULL);
 		if (exc < 0)
@@ -157,7 +157,7 @@ void	get_pipe(t_pipex *s_pp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		pid;
+	// int		pid;
 	t_pipex	s_pp;
 	///////////////////////
 
