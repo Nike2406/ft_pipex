@@ -19,6 +19,7 @@ typedef struct s_pipex
 	int		argc;
 	char	**argv;
 	int		i;
+	char	**cmd;
 }	t_pipex;
 
 char	**path(char **envp);

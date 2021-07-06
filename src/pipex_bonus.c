@@ -19,28 +19,34 @@ char	**path(char **envp)
 		addr[i] = ft_strjoin(addr[i], "/");
 		i++;
 	}
+	// access! - проверка на доступнуость файлов access(addr[i], 0);
 	return (addr);
 }
 
-void	get_exec(t_pipex *s_pp, int j)
+void	get_exec(t_pipex *s_pp)
 {
 	int		i;
 	char	**cmd;
 
 	i = 0;
-	cmd = ft_split(s_pp->argv[j], ' ');
+	cmd = ft_split(s_pp->argv[s_pp->i], ' ');
 	while (s_pp->addr[i])
 	{
+		ft_putstr(ft_strjoin(s_pp->addr[i], cmd[0]));
+		ft_putstr("\n");
 		execve(ft_strjoin(s_pp->addr[i], cmd[0]), cmd, NULL);
 		i++;
 	}
+	ft_putstr("Command not found!\n");
+	exit(1);
 }
 
 void	b_child_process(t_pipex *s_pp)
 {
-		ft_putstr("Hi!\n");
 	if (s_pp->i == 0)
 	{
+		// close(s_pp->fd_fl[1]);
+		ft_putstr("First!\n");
 		dup2(s_pp->fd_fl[0], 0);
 		dup2(s_pp->pp[s_pp->i][1], 1);
 		close(s_pp->pp[s_pp->i][0]);
@@ -48,6 +54,7 @@ void	b_child_process(t_pipex *s_pp)
 	}
 	else if (s_pp->i == s_pp->cmd_numb - 1)
 	{
+		ft_putstr("Last!\n");
 		dup2(s_pp->pp[s_pp->i - 1][0], 0);
 		dup2(s_pp->fd_fl[1], 1);
 		close(s_pp->pp[s_pp->i - 1][1]);
@@ -55,12 +62,13 @@ void	b_child_process(t_pipex *s_pp)
 	}
 	else
 	{
+		ft_putstr("Middle!\n");
 		dup2(s_pp->pp[s_pp->i - 1][0], 0);
 		dup2(s_pp->pp[s_pp->i][1], 1);
 		close(s_pp->pp[s_pp->i - 1][1]);
 		close(s_pp->pp[s_pp->i][0]);
 	}
-	get_exec(s_pp, s_pp->i);
+	get_exec(s_pp);
 }
 
 
@@ -97,6 +105,8 @@ void	ft_err(int	code)
 		ft_putstr("Fork failed.\n");
 	else if (code == 5)
 		ft_putstr("Malloc failed.\n");
+	else if (code == 6)
+		ft_putstr("Wrong command.\n");
 	exit(code);
 }
 
@@ -130,19 +140,26 @@ int	main(int argc, char **argv, char **envp)
 	get_open(&s_pp);
 	s_pp.cmd_numb = argc - 3;
 	s_pp.addr = path(envp);
+
 	while (++s_pp.i < s_pp.cmd_numb)
 	{
 		get_pipe(&s_pp);
 		pid = fork();
 		if (pid < 0)
 			ft_err(4);
+		// ft_putnbr(s_pp.i);
+		// ft_putchar('\n');
 		if (pid == 0)
 			b_child_process(&s_pp);
+		// else if (pid != 0)
+		// 	wait(NULL);
 		// else
 		// 	b_parent_process(&s_pp, argv, fd_fl);
 	}
 	s_pp.i = -1;
 	while (++s_pp.i < s_pp.cmd_numb)
 		wait(NULL);
+	// while (s_pp.i - 2)
+	// 	wait(NULL);
 	return (0);
 }

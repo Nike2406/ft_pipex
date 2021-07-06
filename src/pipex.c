@@ -74,30 +74,14 @@ void	parent_process(char **addr, char **argv, int *fd_pp, int *fd_fl)
 void	ft_err(int	code)
 {
 	if (code == 1)
-	{
 		ft_putstr("Please, add more data.\n");
-		exit(1);
-	}
 	else if (code == 2)
-	{
 		ft_putstr("Error to open input file.\n");
-		exit(2);
-	}
 	else if (code == 3)
-	{
 		ft_putstr("Error to open the pipe.\n");
-		exit(3);
-	}
 	else if (code == 4)
-	{
 		ft_putstr("Fork failed.\n");
-		exit(4);
-	}
-	else
-	{
-		ft_putstr("Unexpected error.\n");
-		exit(-1);
-	}
+	exit(code);
 }
 
 int	main(int argc, char **argv, char **envp)

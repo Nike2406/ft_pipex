@@ -31,6 +31,7 @@ libft:
 
 clean:
 	rm -f $(OBJS)
+	rm -f $(OBJS_BONUS)
 	make -C libft clean
 
 fclean: clean
