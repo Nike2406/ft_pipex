@@ -19,7 +19,7 @@ typedef struct s_pipex
 	int		argc;
 	char	**argv;
 	int		i;
-	char	**cmd;
+	char	*cmd;
 }	t_pipex;
 
 char	**path(char **envp);
@@ -29,5 +29,6 @@ void	b_child_process(t_pipex *s_pp);
 void	b_parent_process(t_pipex *s_pp, int *fd_fl);
 void	ft_err(int	code);
 void	get_open(t_pipex *s_pp);
+void	chk_cmd(t_pipex *s_pp, char *cmd);
 
 #endif

@@ -6,7 +6,7 @@ OBJS	 	= $(SRCS:%.c=%.o)
 OBJS_BONUS 	= $(SRCS_BONUS:%.c=%.o)
 LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
-SRCS_BONUS 	= src/pipex_bonus.c
+SRCS_BONUS 	= src/pipex_rerun.c
 
 .PHONY: all clean fclean re bonus libft norm
 
