@@ -6,7 +6,7 @@
 /*   By: prochell <prochell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/30 12:29:17 by locus2            #+#    #+#             */
-/*   Updated: 2021/07/08 00:07:23 by prochell         ###   ########.fr       */
+/*   Updated: 2021/07/08 01:41:09 by prochell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2[i])
 		str[j++] = s2[i++];
 	str[j] = '\0';
-	free((void *)s1);
+	// free((void *)s1);
 	return (str);
 }

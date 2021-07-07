@@ -138,6 +138,8 @@ void	get_pipe(t_pipex *s_pp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	s_pp;
+	int gnlfd;
+	char	*gnlline;
 
 	if (argc < 5)
 		ft_err(1);
@@ -145,6 +147,14 @@ int	main(int argc, char **argv, char **envp)
 	s_pp.argv = argv;
 	get_pipe(&s_pp);
 	s_pp.addr = path(envp);
+
+	gnlfd = open("/Users/prochell/projects/ft_pipex/input", O_RDONLY);
+	while (get_next_line(gnlfd, &gnlline))
+	{
+		ft_putstr(gnlline);
+		ft_putstr("\n");
+		free(gnlline);
+	}
 	s_pp.i = 0;
 	get_open(&s_pp);
 	b_child_process(&s_pp);

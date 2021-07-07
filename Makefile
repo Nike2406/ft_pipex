@@ -8,7 +8,7 @@ LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
 SRCS_BONUS 	= src/pipex_bonus.c \
 			get_next_line/get_next_line.c \
-			get_next_line/get_next_line_utils.c
+#			get_next_line/get_next_line_utils.c
 # HEADERS		= pipex.h get_next_line/get_next_line.h ./libft/libft.h
 
 .PHONY: all clean fclean re bonus libft norm
@@ -21,7 +21,7 @@ all: libft $(NAME)
 ${NAME}: $(OBJS) pipex.h
 	$(CC) $(OBJS) -Llibft -lft -o $(NAME)
 
-bonus: $(OBJS_BONUS)
+bonus: libft $(OBJS_BONUS) pipex.h
 	$(CC) $(OBJS_BONUS) -Llibft -lft -o $(NAME)
 
 norm:
