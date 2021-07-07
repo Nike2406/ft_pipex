@@ -8,6 +8,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <stdio.h>
+# include "./get_next_line/get_next_line.h"
 
 typedef struct s_pipex
 {
