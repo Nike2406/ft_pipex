@@ -1,13 +1,15 @@
 NAME 		= pipex
 FLAGS		= -Wall -Wextra -Werror
-CFLAGS		= $(FLAGS) -I.
+CFLAGS		= $(FLAGS) -I. -Iget_next_line
 CC			= gcc
 OBJS	 	= $(SRCS:%.c=%.o)
 OBJS_BONUS 	= $(SRCS_BONUS:%.c=%.o)
 LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
-SRCS_BONUS 	= src/pipex_bonus.c /get_next_line/get_next_line_utils.c \
-			/get_next_line/get_next_line.c
+SRCS_BONUS 	= src/pipex_bonus.c \
+			get_next_line/get_next_line.c \
+			get_next_line/get_next_line_utils.c
+# HEADERS		= pipex.h get_next_line/get_next_line.h ./libft/libft.h
 
 .PHONY: all clean fclean re bonus libft norm
 
@@ -16,10 +18,10 @@ SRCS_BONUS 	= src/pipex_bonus.c /get_next_line/get_next_line_utils.c \
 
 all: libft $(NAME)
 
-${NAME}: $(OBJS) /get_next_line/get_next_line.h pipex.h
+${NAME}: $(OBJS) pipex.h
 	$(CC) $(OBJS) -Llibft -lft -o $(NAME)
 
-bonus: libft $(OBJS_BONUS) /get_next_line/get_next_line.h pipex.h
+bonus: $(OBJS_BONUS)
 	$(CC) $(OBJS_BONUS) -Llibft -lft -o $(NAME)
 
 norm:
