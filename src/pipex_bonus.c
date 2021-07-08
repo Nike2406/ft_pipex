@@ -91,11 +91,28 @@ void	b_child_process(t_pipex *s_pp)
 	}
 }
 
-void get_open(t_pipex *s_pp)
+void	get_hdoc(t_pipex *s_pp)
 {
-	s_pp->pp[0][0] = open(s_pp->argv[1], O_RDONLY, 0777);
+	s_pp->pp[0][0] = \
+		open("input_tmp", O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (s_pp->pp[0][0] < 0)
 		ft_err(2);
+	ft_putstr("I'll try to create\n");
+}
+
+void get_open(t_pipex *s_pp)
+{
+	if (s_pp->hdoc)
+	{
+		get_hdoc(s_pp);
+
+	}
+	else
+	{
+		s_pp->pp[0][0] = open(s_pp->argv[1], O_RDONLY, 0777);
+		if (s_pp->pp[0][0] < 0)
+			ft_err(2);
+	}
 	s_pp->pp[s_pp->argc - 2][1] = \
 		open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (s_pp->argv[s_pp->argc - 1][1] < 0)
@@ -138,8 +155,8 @@ void	get_pipe(t_pipex *s_pp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	s_pp;
-	int gnlfd;
-	char	*gnlline;
+	// int gnlfd;
+	// char	*gnlline;
 
 	if (argc < 5)
 		ft_err(1);
@@ -148,14 +165,16 @@ int	main(int argc, char **argv, char **envp)
 	get_pipe(&s_pp);
 	s_pp.addr = path(envp);
 
-	gnlfd = open("/Users/prochell/projects/ft_pipex/input", O_RDONLY);
-	while (get_next_line(gnlfd, &gnlline))
-	{
-		ft_putstr(gnlline);
-		ft_putstr("\n");
-		free(gnlline);
-	}
+	// gnlfd = open("/Users/prochell/projects/ft_pipex/input", O_RDONLY);
+	// while (get_next_line(gnlfd, &gnlline))
+	// {
+	// 	ft_putstr(gnlline);
+	// 	ft_putstr("\n");
+	// 	free(gnlline);
+	// }
 	s_pp.i = 0;
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+		s_pp.hdoc = 1;
 	get_open(&s_pp);
 	b_child_process(&s_pp);
 	while (++s_pp.i < argc - 2)
