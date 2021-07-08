@@ -1,24 +1,5 @@
 #include "../pipex.h"
 
-void	chk_cmd(t_pipex *s_pp, char *cmd)
-{
-	int	i;
-	int	acss;
-
-	i = 0;
-	acss = 0;
-	while (s_pp->addr[i])
-	{
-		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
-		acss = access(s_pp->cmd, 1);
-		if (acss >= 0)
-			return ;
-		i++;
-	}
-	if (acss == -1)
-		ft_err(6);
-}
-
 void	get_exec(t_pipex *s_pp)
 {
 	int		i;
@@ -51,8 +32,13 @@ void	get_exec(t_pipex *s_pp)
 
 void	b_child_process(t_pipex *s_pp)
 {
-	if (s_pp->i == 0)
+	if (s_pp->i == 0 && !s_pp->hdoc)
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
+	else if (s_pp->i == 2 && s_pp->hdoc)
+	{
+		ft_putstr("I can handle this\n");
+		dup2(s_pp->pp[0][0], STDIN_FILENO);
+	}
 	else if (s_pp->i < s_pp->argc - 2)
 	{
 		if (s_pp->i != 1)
@@ -71,11 +57,29 @@ void	b_child_process(t_pipex *s_pp)
 
 void	get_hdoc(t_pipex *s_pp)
 {
+	char	*buf;
+	char	*stop_wrd;
+
+	stop_wrd = s_pp->argv[2];
 	s_pp->pp[0][0] = \
-		open("input_tmp", O_WRONLY | O_APPEND | O_CREAT, 0777);
+		open("input_tmp", O_RDWR | O_APPEND | O_CREAT, 0777);
 	if (s_pp->pp[0][0] < 0)
 		ft_err(2);
-	ft_putstr("I'll try to create\n");
+	buf = "";
+	while (ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+	{
+		ft_putstr("heredoc>");
+		if (get_next_line(0, &buf) && \
+				ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+			{
+				write(s_pp->pp[0][0], buf, ft_strlen(buf));
+				write(s_pp->pp[0][0], "\n", 1);
+			}
+			free(buf);
+	}
+	exit(1);
+
+	// ft_putstr("I'll try to create\n");
 }
 
 void get_open(t_pipex *s_pp)
@@ -83,7 +87,6 @@ void get_open(t_pipex *s_pp)
 	if (s_pp->hdoc)
 	{
 		get_hdoc(s_pp);
-
 	}
 	else
 	{
@@ -130,7 +133,7 @@ int	main(int argc, char **argv, char **envp)
 	// 	free(gnlline);
 	// }
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-		s_pp.hdoc = 1;
+		s_pp.hdoc = 2;
 	else
 		s_pp.hdoc = 0;
 	s_pp.i = 0 + s_pp.hdoc;

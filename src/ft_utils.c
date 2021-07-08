@@ -42,3 +42,22 @@ char	**path(char **envp)
 	}
 	return (addr);
 }
+
+void	chk_cmd(t_pipex *s_pp, char *cmd)
+{
+	int	i;
+	int	acss;
+
+	i = 0;
+	acss = 0;
+	while (s_pp->addr[i])
+	{
+		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
+		acss = access(s_pp->cmd, 1);
+		if (acss >= 0)
+			return ;
+		i++;
+	}
+	if (acss == -1)
+		ft_err(6);
+}

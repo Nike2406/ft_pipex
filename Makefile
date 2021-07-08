@@ -8,6 +8,7 @@ LIBFT_OBJS	= $(LIBFT:%.c=%.o)
 SRCS 		= src/pipex.c
 SRCS_BONUS 	= src/pipex_bonus.c \
 			get_next_line/get_next_line.c \
+			src/ft_utils.c
 #			get_next_line/get_next_line_utils.c
 # HEADERS		= pipex.h get_next_line/get_next_line.h ./libft/libft.h
 
