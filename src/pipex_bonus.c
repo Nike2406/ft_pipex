@@ -1,27 +1,5 @@
 #include "../pipex.h"
 
-char	**path(char **envp)
-{
-	int		i;
-	char	**addr;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strnstr(envp[i], "PATH=", 5))
-			break ;
-		i++;
-	}
-	addr = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (addr[i])
-	{
-		addr[i] = ft_strjoin(addr[i], "/");
-		i++;
-	}
-	return (addr);
-}
-
 void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
 	int	i;
@@ -119,27 +97,6 @@ void get_open(t_pipex *s_pp)
 		ft_err(1);
 }
 
-void	ft_err(int	code)
-{
-	if (code == 1)
-		ft_putstr("Please, add more data.\n");
-	else if (code == 2)
-		ft_putstr("Error to open input file.\n");
-	else if (code == 3)
-		ft_putstr("Error to open the pipe.\n");
-	else if (code == 4)
-		ft_putstr("Fork failed.\n");
-	else if (code == 5)
-		ft_putstr("Malloc failed.\n");
-	else if (code == 6)
-		ft_putstr("Wrong command.\n");
-	else if (code == 7)
-		ft_putstr("Execute failed.\n");
-	else
-		ft_putstr("Unexpected error.\n");
-	exit(code);
-}
-
 void	get_pipe(t_pipex *s_pp)
 {
 	int	i;
@@ -172,9 +129,11 @@ int	main(int argc, char **argv, char **envp)
 	// 	ft_putstr("\n");
 	// 	free(gnlline);
 	// }
-	s_pp.i = 0;
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 		s_pp.hdoc = 1;
+	else
+		s_pp.hdoc = 0;
+	s_pp.i = 0 + s_pp.hdoc;
 	get_open(&s_pp);
 	b_child_process(&s_pp);
 	while (++s_pp.i < argc - 2)
