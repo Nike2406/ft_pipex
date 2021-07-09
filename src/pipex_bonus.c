@@ -34,7 +34,7 @@ void	b_child_process(t_pipex *s_pp)
 {
 	if (s_pp->i == 0 && !s_pp->hdoc)
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
-	else if (s_pp->i == 2 && s_pp->hdoc)
+	else if (s_pp->hdoc)
 	{
 		ft_putstr("I can handle this\n");
 		dup2(s_pp->pp[0][0], STDIN_FILENO);

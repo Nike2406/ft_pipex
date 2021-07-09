@@ -14,3 +14,4 @@ output
 /cmake-build-debug/
 CMakeLists.txt
 /pipex.dSYM/
+./input_tmp
