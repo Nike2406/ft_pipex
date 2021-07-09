@@ -16,6 +16,8 @@ void	ft_err(int	code)
 		ft_putstr("Wrong command.\n");
 	else if (code == 7)
 		ft_putstr("Execute failed.\n");
+	else if (code == 8)
+		ft_putstr("Pipe failed.\n");
 	else
 		ft_putstr("Unexpected error.\n");
 	exit(code);
