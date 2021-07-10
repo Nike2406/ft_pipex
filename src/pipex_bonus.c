@@ -1,28 +1,36 @@
 #include "../pipex.h"
 
-void	get_exec(t_pipex *s_pp)
+void	get_exec(t_pipex *s_pp, pid_t *pid)
 {
 	int		i;
 	char	**cmd;
-	int		pid;
+	//int		*pid;
 	int		exc;
 
+
 	i = 0;
-	cmd = ft_split(s_pp->argv[s_pp->i + 1], ' ');
+	//s_pp->i
+	//cmd = ft_split(s_pp->argv[s_pp->i + 1], ' ');
+	cmd = ft_split(s_pp->argv[s_pp->i], ' ');
 	chk_cmd(s_pp, cmd[0]);
-	pid = fork();
-	if (pid < 0)
+	*pid = fork();
+	if (*pid < 0)
 		ft_err(4);
-	if (pid != 0)
+	if (*pid != 0)
 	{
-		close(s_pp->pp[s_pp->i][1]);
-		wait(NULL);
+		//wait(NULL);
+		close(s_pp->pp[s_pp->i - s_pp->hdoc][1]);
+		int j = -1;
+		while (cmd[++j])
+			free(cmd[j]);
+		free(cmd);
 	}
 	else
 	{
 		b_child_process(s_pp);
 		// if (s_pp->i == s_pp->argc - 3)
 		// 	dup2(s_pp->pp[s_pp->argc - 2][1], 1);
+		//write( STDOUT_FILENO, "\n\n\ntest error\n\n\n", 17);
 		exc = execve(s_pp->cmd, cmd, NULL);
 		if (exc < 0)
 			ft_err(7);
@@ -35,9 +43,9 @@ void	b_child_process(t_pipex *s_pp)
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
 	else if (s_pp->hdoc && s_pp->i == 2)
 	{
-		ft_putnbr(s_pp->i);
-		ft_putstr("\n");
-		ft_putstr("First\n");
+		// ft_putnbr(s_pp->i);
+		// ft_putstr("\n");
+		// ft_putstr("First\n");
 		close(s_pp->pp[0][1]);
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
 		// close(s_pp->pp[0][1]);
@@ -45,33 +53,34 @@ void	b_child_process(t_pipex *s_pp)
 	}
 	else if (s_pp->i < s_pp->argc - 3)
 	{
-		ft_putnbr(s_pp->i);
-		ft_putstr("\n");
-		ft_putstr("Second\n");
+		// ft_putnbr(s_pp->i);
+		// ft_putstr("\n");
+		// ft_putstr("Second\n");
 		if (s_pp->i != 1 || (s_pp->i != 3 && s_pp->hdoc))
 		{
 			close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
 			ft_putstr("I closed the pipe\n");
 		}
-		ft_putstr("Third\n");
+		// ft_putstr("Third\n");
 		dup2(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0], STDIN_FILENO);
-		ft_putstr("Fourth\n");
+		// ft_putstr("Fourth\n");
 		close(s_pp->pp[s_pp->i - s_pp->hdoc][0]);
-		ft_putstr("Fifth\n");
+		// ft_putstr("Fifth\n");
 		dup2(s_pp->pp[s_pp->i - s_pp->hdoc][1], STDOUT_FILENO);
 		// close(s_pp->pp[s_pp->i - s_pp->hdoc][1]);
-		ft_putstr("Sixth\n");
+		// ft_putstr("Sixth\n");
 	}
 	else
 	{
-		ft_putstr("Seventh\n");
-		ft_putnbr(s_pp->i);
-		ft_putstr("\n");
+		//s_pp->pp[s_pp->argc - 2][1]
+		// ft_putstr("Seventh\n");
+		// ft_putnbr(s_pp->i);
+		// ft_putstr("\n");
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
 		dup2(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0], STDIN_FILENO);
 		ft_putstr("8\n");
 		close(s_pp->pp[s_pp->argc - 1][0]);
-		dup2(s_pp->pp[s_pp->argc - 2][1], 1);
+		//dup2(s_pp->pp[s_pp->argc - 2][1], 1);
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0]);
 		ft_putstr("9\n");
 	}
@@ -133,7 +142,7 @@ void	get_pipe(t_pipex *s_pp)
 	int	i;
 
 	i = 0;
-	while (i < s_pp->argc + 1)
+	while (i < s_pp->argc -  s_pp->hdoc)
 	{
 		pipe(s_pp->pp[i]);
 		i++;
@@ -143,6 +152,10 @@ void	get_pipe(t_pipex *s_pp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	s_pp;
+	pid_t *pid;
+	int i;
+
+	pid = (pid_t *)malloc(sizeof(pid_t) * 4);
 	// int gnlfd;
 	// char	*gnlline;
 
@@ -167,13 +180,19 @@ int	main(int argc, char **argv, char **envp)
 	s_pp.i = 0 + s_pp.hdoc;
 	get_open(&s_pp);
 	b_child_process(&s_pp);
-	while (++s_pp.i < argc - 2)
+	// int tmp;
+	// tmp = s_pp.i - 1;
+	i = -1;
+	while (++s_pp.i <= argc - 2)
 	{
 		// ft_putstr(argv[s_pp.i]);
 		// ft_putstr("\n");
-		get_exec(&s_pp);
+		get_exec(&s_pp, &pid[++i]);
 	}
-	close(s_pp.pp[0][0]);
-	close(s_pp.pp[argc - 2][1]);
+	while (1)
+		;
+	i = -1;
+	while(pid[++i])
+		wait(&pid[i]);
 	return (0);
 }

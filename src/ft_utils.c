@@ -52,6 +52,7 @@ void	chk_cmd(t_pipex *s_pp, char *cmd)
 
 	i = 0;
 	acss = 0;
+	printf("cmd parse %s\n", cmd);
 	while (s_pp->addr[i])
 	{
 		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
