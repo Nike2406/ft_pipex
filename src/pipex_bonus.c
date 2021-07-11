@@ -7,8 +7,12 @@ void	get_exec(t_pipex *s_pp)
 	int		pid;
 	int		exc;
 
+	if (s_pp->hdoc)
+		i = 0;
+	else
+		i = 1;
+	cmd = ft_split(s_pp->argv[s_pp->i + i], ' ');
 	i = 0;
-	cmd = ft_split(s_pp->argv[s_pp->i + 1], ' ');
 
 	// ft_putstr("s_pp.i in get_exec = ");
 	// ft_putnbr(s_pp->i);
@@ -36,6 +40,9 @@ void	get_exec(t_pipex *s_pp)
 		b_child_process(s_pp);
 		// if (s_pp->i == s_pp->argc - 3)
 		// 	dup2(s_pp->pp[s_pp->argc - 2][1], 1);
+		ft_putstr("I do this: ");
+		ft_putstr(s_pp->cmd);
+		ft_putstr("\n");
 		exc = execve(s_pp->cmd, cmd, NULL);
 		if (exc < 0)
 			ft_err(7);
@@ -80,7 +87,10 @@ void	b_child_process(t_pipex *s_pp)
 
 
 	if (s_pp->i == 0 && !s_pp->hdoc)
-		dup2(s_pp->pp[0][0], STDIN_FILENO);
+		{
+			ft_putstr("First\n");
+			dup2(s_pp->pp[0][0], STDIN_FILENO);
+		}
 	else if (s_pp->hdoc && s_pp->i == 2)
 	{
 		// ft_putnbr(s_pp->i);
@@ -95,12 +105,12 @@ void	b_child_process(t_pipex *s_pp)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
-		// ft_putstr("Second\n");
-		if (s_pp->i != 1 || (s_pp->i != 3 && s_pp->hdoc))
-		{
+		ft_putstr("Second\n");
+		// if (s_pp->i != 1 || (s_pp->i != 3 && s_pp->hdoc))
+		// {
 			close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
 			// ft_putstr("I closed the pipe\n");
-		}
+		// }
 		// ft_putstr("Third\n");
 		dup2(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0], STDIN_FILENO);
 		// ft_putstr("Fourth\n");
@@ -112,7 +122,7 @@ void	b_child_process(t_pipex *s_pp)
 	}
 	else
 	{
-		// ft_putstr("Seventh\n");
+		ft_putstr("Seventh\n");
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
@@ -216,7 +226,7 @@ int	main(int argc, char **argv, char **envp)
 		s_pp.hdoc = 0;
 	s_pp.i = 0 + s_pp.hdoc;
 	get_open(&s_pp);
-	// b_child_process(&s_pp);
+	b_child_process(&s_pp);
 	// ft_putstr("cmd = ");
 	// ft_putstr(argv[s_pp.i]);
 	// ft_putstr("\n");
