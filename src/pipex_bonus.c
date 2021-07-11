@@ -89,17 +89,17 @@ void	b_child_process(t_pipex *s_pp)
 			ft_putstr("InFirst\n");
 			dup2(s_pp->pp[0][0], STDIN_FILENO);
 		}
-	else if (s_pp->hdoc && s_pp->i == 2)
+	else if (s_pp->hdoc && s_pp->i == 3)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
 		ft_putstr("First\n");
-		close(s_pp->pp[0][1]);
+		// close(s_pp->pp[0][1]);
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
 		// close(s_pp->pp[0][1]);
 		// close(s_pp->pp[0][0]);
 	}
-	else if (s_pp->i < s_pp->argc - 3)
+	else if (s_pp->i < s_pp->argc - 2)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
@@ -228,7 +228,7 @@ int	main(int argc, char **argv, char **envp)
 	// ft_putstr("cmd = ");
 	// ft_putstr(argv[s_pp.i]);
 	// ft_putstr("\n");
-	while (++s_pp.i < argc - 2)
+	while (++s_pp.i < argc - 1)
 	{
 		get_exec(&s_pp);
 	}
