@@ -14,9 +14,6 @@ void	get_exec(t_pipex *s_pp)
 	cmd = ft_split(s_pp->argv[s_pp->i + i], ' ');
 	i = 0;
 
-	// ft_putstr("s_pp.i in get_exec = ");
-	// ft_putnbr(s_pp->i);
-	// ft_putstr("\n");
 
 	ft_putstr("cmd = ");
 	// ft_putstr(s_pp->argv[s_pp->i]);
@@ -34,6 +31,10 @@ void	get_exec(t_pipex *s_pp)
 	}
 	else
 	{
+		ft_putstr("s_pp.i in get_exec = ");
+		ft_putnbr(s_pp->i);
+		ft_putstr("\n");
+
 		ft_putstr("Execute command: ");
 		ft_putstr(s_pp->cmd);
 		ft_putstr("\n");
@@ -84,7 +85,10 @@ void	b_child_process(t_pipex *s_pp)
 
 
 	if (s_pp->i == 0 && !s_pp->hdoc)
-		dup2(s_pp->pp[0][0], STDIN_FILENO);
+		{
+			ft_putstr("InFirst\n");
+			dup2(s_pp->pp[0][0], STDIN_FILENO);
+		}
 	else if (s_pp->hdoc && s_pp->i == 2)
 	{
 		// ft_putnbr(s_pp->i);
