@@ -16,7 +16,7 @@ void	get_exec(t_pipex *s_pp)
 	if (pid != 0)
 	{
 		wait(NULL);
-		close(s_pp->pp[s_pp->i][1]);
+		close(s_pp->pp[s_pp->i - s_pp->hdoc][1]);
 	}
 	else
 	{
@@ -73,7 +73,7 @@ void	b_child_process(t_pipex *s_pp)
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
 		// ft_putstr("First\n");
-		// close(s_pp->pp[0][1]);
+		close(s_pp->pp[0][1]);
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
 		// close(s_pp->pp[0][1]);
 		// close(s_pp->pp[0][0]);
@@ -152,7 +152,7 @@ void get_open(t_pipex *s_pp)
 		s_pp->pp[0][0] = open(s_pp->argv[1], O_RDONLY, 0777);
 		if (s_pp->pp[0][0] < 0)
 			ft_err(2);
-		ft_putstr("File 1 opened\n");
+		// ft_putstr("File 1 opened\n");
 	}
 	if (s_pp->hdoc)
 		s_pp->pp[s_pp->argc - 2][1] = \
@@ -162,7 +162,7 @@ void get_open(t_pipex *s_pp)
 			open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (s_pp->argv[s_pp->argc - 1][1] < 0)
 		ft_err(1);
-	ft_putstr("File 2 opened\n");
+	// ft_putstr("File 2 opened\n");
 }
 
 void	get_pipe(t_pipex *s_pp)
@@ -203,10 +203,10 @@ int	main(int argc, char **argv, char **envp)
 		s_pp.hdoc = 0;
 	s_pp.i = 0 + s_pp.hdoc;
 	get_open(&s_pp);
-	b_child_process(&s_pp);
-	ft_putstr("cmd = ");
-	ft_putstr(argv[s_pp.i]);
-	ft_putstr("\n");
+	// b_child_process(&s_pp);
+	// ft_putstr("cmd = ");
+	// ft_putstr(argv[s_pp.i]);
+	// ft_putstr("\n");
 	while (++s_pp.i < argc - 2)
 	{
 		ft_putstr("cmd = ");
@@ -215,8 +215,8 @@ int	main(int argc, char **argv, char **envp)
 		get_exec(&s_pp);
 	}
 	s_pp.i = -1;
-	while (++s_pp.i < s_pp.argc)
-		wait(NULL);
+	// while (++s_pp.i < s_pp.argc)
+	// 	wait(NULL);
 	// close(s_pp.pp[0][0]);
 	// close(s_pp.pp[argc - 2][1]);
 	return (0);
