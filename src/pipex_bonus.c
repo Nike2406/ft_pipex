@@ -7,8 +7,22 @@ void	get_exec(t_pipex *s_pp)
 	int		pid;
 	int		exc;
 
+	if (s_pp->hdoc)
+		i = 0;
+	else
+		i = 1;
+	cmd = ft_split(s_pp->argv[s_pp->i + i], ' ');
 	i = 0;
-	cmd = ft_split(s_pp->argv[s_pp->i + 1], ' ');
+
+	// ft_putstr("s_pp.i in get_exec = ");
+	// ft_putnbr(s_pp->i);
+	// ft_putstr("\n");
+
+	ft_putstr("cmd = ");
+	// ft_putstr(s_pp->argv[s_pp->i]);
+	ft_putstr(cmd[0]);
+	ft_putstr("\n");
+
 	chk_cmd(s_pp, cmd[0]);
 	pid = fork();
 	if (pid < 0)
@@ -20,6 +34,9 @@ void	get_exec(t_pipex *s_pp)
 	}
 	else
 	{
+		ft_putstr("Execute command: ");
+		ft_putstr(s_pp->cmd);
+		ft_putstr("\n");
 		b_child_process(s_pp);
 		// if (s_pp->i == s_pp->argc - 3)
 		// 	dup2(s_pp->pp[s_pp->argc - 2][1], 1);
@@ -31,7 +48,7 @@ void	get_exec(t_pipex *s_pp)
 
 void	b_child_process(t_pipex *s_pp)
 {
-	ft_putstr("s_pp.i = ");
+	ft_putstr("s_pp.i in b_child = ");
 	ft_putnbr(s_pp->i);
 	ft_putstr("\n");
 	// if (s_pp->i == 0 && !s_pp->hdoc)
@@ -72,7 +89,7 @@ void	b_child_process(t_pipex *s_pp)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
-		// ft_putstr("First\n");
+		ft_putstr("First\n");
 		close(s_pp->pp[0][1]);
 		dup2(s_pp->pp[0][0], STDIN_FILENO);
 		// close(s_pp->pp[0][1]);
@@ -82,7 +99,7 @@ void	b_child_process(t_pipex *s_pp)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
-		// ft_putstr("Second\n");
+		ft_putstr("Second\n");
 		if (s_pp->i != 1 || (s_pp->i != 3 && s_pp->hdoc))
 		{
 			close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
@@ -99,7 +116,7 @@ void	b_child_process(t_pipex *s_pp)
 	}
 	else
 	{
-		// ft_putstr("Seventh\n");
+		ft_putstr("Seventh\n");
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
@@ -209,11 +226,9 @@ int	main(int argc, char **argv, char **envp)
 	// ft_putstr("\n");
 	while (++s_pp.i < argc - 2)
 	{
-		ft_putstr("cmd = ");
-		ft_putstr(argv[s_pp.i]);
-		ft_putstr("\n");
 		get_exec(&s_pp);
 	}
+	// get_exec(&s_pp);
 	s_pp.i = -1;
 	// while (++s_pp.i < s_pp.argc)
 	// 	wait(NULL);

@@ -47,19 +47,26 @@ char	**path(char **envp)
 
 void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
-	int	i;
-	int	acss;
+	int		i;
+	int		acss;
+	char	*tmp;
 
 	i = 0;
 	acss = 0;
 	while (s_pp->addr[i])
 	{
 		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
+		tmp = s_pp->cmd;
 		acss = access(s_pp->cmd, 1);
 		if (acss >= 0)
 			return ;
 		i++;
+		free(tmp);
 	}
+	ft_putstr("Chk command: ");
+	ft_putstr(s_pp->cmd);
+	ft_putstr("\n");
+
 	if (acss == -1)
 		ft_err(6);
 }
