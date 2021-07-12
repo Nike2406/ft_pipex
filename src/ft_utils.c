@@ -71,10 +71,13 @@ void	get_pipe(t_pipex *s_pp)
 {
 	int	i;
 
-	i = 0 + s_pp->hdoc;
+	i = 0;
+	if (s_pp->hdoc)
+		i = 1;
 	while (i < s_pp->argc - s_pp->jhd)
 	{
-		pipe(s_pp->pp[i]);
+		if (pipe(s_pp->pp[i]) < 0)
+			ft_err(3);
 		i++;
 	}
 }

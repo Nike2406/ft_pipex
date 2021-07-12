@@ -65,23 +65,32 @@ void	get_hdoc(t_pipex *s_pp)
 {
 	char	*buf;
 	char	*stop_wrd;
+	int		pid;
 
+	if (pipe(s_pp->pp[0]) < 0)
+		ft_err(3);
+	pid = fork();
+	if (pid < 0)
+		ft_err(4);
 	stop_wrd = s_pp->argv[2];
-	s_pp->pp[0][0] = \
-		open("input_tmp", O_RDWR | O_APPEND | O_CREAT, 0777);
-	if (s_pp->pp[0][0] < 0)
-		ft_err(2);
-	buf = "";
-	while (ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+	if (!pid)
 	{
-		ft_putstr("heredoc>");
-		if (get_next_line(0, &buf) && \
-				ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+		// s_pp->pp[0][0] = \
+		// 	open("input_tmp", O_RDWR | O_APPEND | O_CREAT, 0777);
+		// if (s_pp->pp[0][0] < 0)
+		// 	ft_err(2);
+		buf = "";
+		while (ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
 		{
-			write(s_pp->pp[0][0], buf, ft_strlen(buf));
-			write(s_pp->pp[0][0], "\n", 1);
+			ft_putstr("heredoc>");
+			if (get_next_line(0, &buf) && \
+					ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+			{
+				write(s_pp->pp[0][1], buf, ft_strlen(buf));
+				write(s_pp->pp[0][1], "\n", 1);
+			}
+			free(buf);
 		}
-		free(buf);
 	}
 	return ;
 }
