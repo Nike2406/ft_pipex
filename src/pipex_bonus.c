@@ -7,12 +7,10 @@ void	get_exec(t_pipex *s_pp)
 	int		pid;
 	int		exc;
 
+	i = 1;
 	if (s_pp->hdoc)
 		i = 0;
-	else
-		i = 1;
 	cmd = ft_split(s_pp->argv[s_pp->i + i], ' ');
-	i = 0;
 	chk_cmd(s_pp, cmd[0]);
 	pid = fork();
 	if (pid < 0)
@@ -24,14 +22,16 @@ void	get_exec(t_pipex *s_pp)
 	}
 	else
 	{
-		// if (pid == 0)
-		// {
-			b_child_process(s_pp);
-			exc = execve(s_pp->cmd, cmd, NULL);
-			if (exc < 0)
-				ft_err(7);
-		// }
+		b_child_process(s_pp);
+		exc = execve(s_pp->cmd, cmd, NULL);
+		if (exc < 0)
+			ft_err(7);
 	}
+	i = 0;
+	free(s_pp->cmd);
+	while (cmd[i])
+		free(cmd[i++]);
+	free(cmd);
 }
 
 void	b_child_process(t_pipex *s_pp)
@@ -64,7 +64,6 @@ void	b_child_process(t_pipex *s_pp)
 void	get_hdoc(t_pipex *s_pp)
 {
 	char	*buf;
-	char	*stop_wrd;
 	int		pid;
 
 	if (pipe(s_pp->pp[0]) < 0)
@@ -72,19 +71,14 @@ void	get_hdoc(t_pipex *s_pp)
 	pid = fork();
 	if (pid < 0)
 		ft_err(4);
-	stop_wrd = s_pp->argv[2];
 	if (!pid)
 	{
-		// s_pp->pp[0][0] = \
-		// 	open("input_tmp", O_RDWR | O_APPEND | O_CREAT, 0777);
-		// if (s_pp->pp[0][0] < 0)
-		// 	ft_err(2);
 		buf = "";
-		while (ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+		while (ft_strncmp(s_pp->argv[2], buf, ft_strlen(s_pp->argv[2]) + 1))
 		{
 			ft_putstr("heredoc>");
-			if (get_next_line(0, &buf) && \
-					ft_strncmp(stop_wrd, buf, ft_strlen(stop_wrd) + 1))
+			if (get_next_line(0, &buf) >= 0 && \
+					ft_strncmp(s_pp->argv[2], buf, ft_strlen(s_pp->argv[2]) + 1))
 			{
 				write(s_pp->pp[0][1], buf, ft_strlen(buf));
 				write(s_pp->pp[0][1], "\n", 1);
@@ -119,8 +113,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	s_pp;
 
-	if (argc < 5)
-		ft_err(1);
 	s_pp.argc = argc;
 	s_pp.argv = argv;
 	get_pipe(&s_pp);
@@ -128,22 +120,25 @@ int	main(int argc, char **argv, char **envp)
 	s_pp.hdoc = 0;
 	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
 		s_pp.hdoc = 2;
-	s_pp.i = 0 + s_pp.hdoc;
-	get_open(&s_pp);
-	b_child_process(&s_pp);
 	s_pp.jhd = 2;
 	if (s_pp.hdoc)
 		s_pp.jhd = 1;
+	if (s_pp.hdoc)
+		if (argc < 6)
+			ft_err(1);
+	if (argc < 5)
+		ft_err(1);
+	s_pp.i = 0 + s_pp.hdoc;
+	get_open(&s_pp);
+	b_child_process(&s_pp);
 	s_pp.i = 0 + s_pp.hdoc;
 	while (++s_pp.i < argc - s_pp.jhd)
 		get_exec(&s_pp);
-	// s_pp.i = 0 + s_pp.hdoc;
-	// while (++s_pp.i < argc - s_pp.jhd)
-	// {
-	// 	wait(NULL);
-	// 	close(s_pp.pp[s_pp.i - s_pp.hdoc][1]);
-	// }
-	// while (++s_pp.i < s_pp.argc)
-	// 	wait(NULL);
+	//  int i = 0;
+	// printf("Struct addr: %p\n", s_pp.addr);
+	// while (s_pp.addr[i])
+	// 	printf("%p\n", s_pp.addr[i++]);
+	while (1);
+
 	return (0);
 }

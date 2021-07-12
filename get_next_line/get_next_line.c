@@ -43,6 +43,7 @@ int	get_next_line(int fd, char **line)
 	int			rdd_bts;
 	char		*tmp_chr;
 	static char	*reminder;
+	char		*tmp;
 
 	rdd_bts = chk_rules(&buf, fd, line);
 	if (rdd_bts < 0)
@@ -59,7 +60,9 @@ int	get_next_line(int fd, char **line)
 			tmp_chr++;
 			reminder = ft_strdup(tmp_chr);
 		}
+		tmp = *line;
 		*line = ft_strjoin(*line, buf);
+		free(tmp);
 	}
 	free(buf);
 	return (rdd_bts && reminder);

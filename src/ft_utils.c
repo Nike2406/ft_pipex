@@ -27,6 +27,7 @@ char	**path(char **envp)
 {
 	int		i;
 	char	**addr;
+	char	*tmp;
 
 	i = 0;
 	while (envp[i])
@@ -39,9 +40,16 @@ char	**path(char **envp)
 	i = 0;
 	while (addr[i])
 	{
+		tmp = addr[i];
 		addr[i] = ft_strjoin(addr[i], "/");
 		i++;
+		free(tmp);
 	}
+	// tmp = addr;
+	// i = 0;
+	// while (tmp[i])
+	// 	free(tmp[i++]);
+	// free(tmp);
 	return (addr);
 }
 
@@ -49,19 +57,23 @@ void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
 	int		i;
 	int		acss;
-	char	*tmp;
+	//char	*tmp;
 
 	i = 0;
 	acss = 0;
 	while (s_pp->addr[i])
 	{
 		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
-		tmp = s_pp->cmd;
+		//tmp = s_pp->cmd;
 		acss = access(s_pp->cmd, 1);
 		if (acss >= 0)
+		{
+			// free(s_pp->cmd);
 			return ;
+		}
 		i++;
-		free(tmp);
+		// printf("cmd: %p\n", s_pp->cmd);
+		free(s_pp->cmd);
 	}
 	if (acss == -1)
 		ft_err(6);
