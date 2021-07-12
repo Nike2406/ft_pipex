@@ -84,7 +84,12 @@ void	b_child_process(t_pipex *s_pp)
 	// 	close(s_pp->pp[s_pp->i - s_pp->hdoc][0]);
 	// }
 
+	int	jhd;
 
+	if (s_pp->hdoc)
+		jhd = 2;
+	else
+		jhd = 3;
 
 	if (s_pp->i == 0 && !s_pp->hdoc)
 		{
@@ -101,7 +106,7 @@ void	b_child_process(t_pipex *s_pp)
 		// close(s_pp->pp[0][1]);
 		// close(s_pp->pp[0][0]);
 	}
-	else if (s_pp->i < s_pp->argc - 3)
+	else if (s_pp->i < s_pp->argc - jhd)
 	{
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
@@ -126,12 +131,16 @@ void	b_child_process(t_pipex *s_pp)
 		// ft_putnbr(s_pp->i);
 		// ft_putstr("\n");
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][1]);
+		ft_putstr("8\n");
 		dup2(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0], STDIN_FILENO);
-		// ft_putstr("8\n");
+		ft_putstr("9\n");
+		ft_putstr("10\n");
 		close(s_pp->pp[s_pp->argc - 1][0]);
+		ft_putstr("11\n");
 		dup2(s_pp->pp[s_pp->argc - 2][1], 1);
+		ft_putstr("12\n");
 		close(s_pp->pp[s_pp->i - 1 - s_pp->hdoc][0]);
-		// ft_putstr("9\n");
+		ft_putstr("13\n");
 	}
 }
 
@@ -205,6 +214,7 @@ int	main(int argc, char **argv, char **envp)
 	t_pipex	s_pp;
 	// int gnlfd;
 	// char	*gnlline;
+	int	jhd;
 
 	if (argc < 5)
 		ft_err(1);
@@ -230,7 +240,11 @@ int	main(int argc, char **argv, char **envp)
 	// ft_putstr("cmd = ");
 	// ft_putstr(argv[s_pp.i]);
 	// ft_putstr("\n");
-	while (++s_pp.i < argc - 2)
+	if (s_pp.hdoc)
+		jhd = 1;
+	else
+		jhd = 2;
+	while (++s_pp.i < argc - jhd)
 	{
 		get_exec(&s_pp);
 	}
