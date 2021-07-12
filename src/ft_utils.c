@@ -63,10 +63,18 @@ void	chk_cmd(t_pipex *s_pp, char *cmd)
 		i++;
 		free(tmp);
 	}
-	ft_putstr("Chk command: ");
-	ft_putstr(s_pp->cmd);
-	ft_putstr("\n");
-
 	if (acss == -1)
 		ft_err(6);
+}
+
+void	get_pipe(t_pipex *s_pp)
+{
+	int	i;
+
+	i = 0 + s_pp->hdoc;
+	while (i < s_pp->argc - s_pp->jhd)
+	{
+		pipe(s_pp->pp[i]);
+		i++;
+	}
 }
