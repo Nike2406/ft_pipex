@@ -2,10 +2,9 @@
 
 void	get_exec(t_pipex *s_pp)
 {
-	int		i;
 	char	**cmd;
 	int		pid;
-	int		exc;
+	int		i;
 
 	i = 1;
 	if (s_pp->hdoc)
@@ -15,23 +14,7 @@ void	get_exec(t_pipex *s_pp)
 	pid = fork();
 	if (pid < 0)
 		ft_err(4);
-	if (pid != 0)
-	{
-		wait(NULL);
-		close(s_pp->pp[s_pp->i - s_pp->hdoc][1]);
-	}
-	else
-	{
-		b_child_process(s_pp);
-		exc = execve(s_pp->cmd, cmd, NULL);
-		if (exc < 0)
-			ft_err(7);
-	}
-	i = 0;
-	free(s_pp->cmd);
-	while (cmd[i])
-		free(cmd[i++]);
-	free(cmd);
+	do_pid(s_pp, cmd, pid);
 }
 
 void	b_child_process(t_pipex *s_pp)
@@ -105,7 +88,7 @@ void get_open(t_pipex *s_pp)
 	else
 		s_pp->pp[s_pp->argc - 2][1] = \
 			open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (s_pp->argv[s_pp->argc - 1][1] < 0)
+	if (s_pp->argv[s_pp->argc - 2][1] < 0)
 		ft_err(1);
 }
 
@@ -134,11 +117,5 @@ int	main(int argc, char **argv, char **envp)
 	s_pp.i = 0 + s_pp.hdoc;
 	while (++s_pp.i < argc - s_pp.jhd)
 		get_exec(&s_pp);
-	//  int i = 0;
-	// printf("Struct addr: %p\n", s_pp.addr);
-	// while (s_pp.addr[i])
-	// 	printf("%p\n", s_pp.addr[i++]);
-	while (1);
-
 	return (0);
 }

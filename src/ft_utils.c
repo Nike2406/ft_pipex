@@ -45,11 +45,6 @@ char	**path(char **envp)
 		i++;
 		free(tmp);
 	}
-	// tmp = addr;
-	// i = 0;
-	// while (tmp[i])
-	// 	free(tmp[i++]);
-	// free(tmp);
 	return (addr);
 }
 
@@ -57,22 +52,15 @@ void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
 	int		i;
 	int		acss;
-	//char	*tmp;
-
 	i = 0;
 	acss = 0;
 	while (s_pp->addr[i])
 	{
 		s_pp->cmd = ft_strjoin(s_pp->addr[i], cmd);
-		//tmp = s_pp->cmd;
 		acss = access(s_pp->cmd, 1);
 		if (acss >= 0)
-		{
-			// free(s_pp->cmd);
 			return ;
-		}
 		i++;
-		// printf("cmd: %p\n", s_pp->cmd);
 		free(s_pp->cmd);
 	}
 	if (acss == -1)
@@ -92,4 +80,28 @@ void	get_pipe(t_pipex *s_pp)
 			ft_err(3);
 		i++;
 	}
+}
+
+void	do_pid(t_pipex *s_pp, char **cmd, int pid)
+{
+	int		exc;
+	int		i;
+
+	i = 0;
+	if (pid != 0)
+	{
+		wait(NULL);
+		close(s_pp->pp[s_pp->i - s_pp->hdoc][1]);
+	}
+	else
+	{
+		b_child_process(s_pp);
+		exc = execve(s_pp->cmd, cmd, NULL);
+		if (exc < 0)
+			ft_err(7);
+	}
+	free(s_pp->cmd);
+	while (cmd[i])
+		free(cmd[i++]);
+	free(cmd);
 }

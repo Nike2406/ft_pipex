@@ -32,5 +32,6 @@ void	chk_cmd(t_pipex *s_pp, char *cmd);
 void	get_pipe(t_pipex *s_pp);
 void	get_exec(t_pipex *s_pp);
 void	get_hdoc(t_pipex *s_pp);
+void	do_pid(t_pipex *s_pp, char **cmd, int pid);
 
 #endif
