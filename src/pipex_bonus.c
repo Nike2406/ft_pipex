@@ -61,7 +61,8 @@ void	get_hdoc(t_pipex *s_pp)
 		{
 			ft_putstr("heredoc>");
 			if (get_next_line(0, &buf) >= 0 && \
-					ft_strncmp(s_pp->argv[2], buf, ft_strlen(s_pp->argv[2]) + 1))
+					ft_strncmp(s_pp->argv[2], buf, \
+					ft_strlen(s_pp->argv[2]) + 1))
 			{
 				write(s_pp->pp[0][1], buf, ft_strlen(buf));
 				write(s_pp->pp[0][1], "\n", 1);
@@ -72,7 +73,7 @@ void	get_hdoc(t_pipex *s_pp)
 	return ;
 }
 
-void get_open(t_pipex *s_pp)
+void	get_open(t_pipex *s_pp)
 {
 	if (s_pp->hdoc)
 		get_hdoc(s_pp);
@@ -84,10 +85,12 @@ void get_open(t_pipex *s_pp)
 	}
 	if (s_pp->hdoc)
 		s_pp->pp[s_pp->argc - 2][1] = \
-			open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_APPEND | O_CREAT, 0777);
+			open(s_pp->argv[s_pp->argc - 1], \
+			O_WRONLY | O_APPEND | O_CREAT, 0777);
 	else
 		s_pp->pp[s_pp->argc - 2][1] = \
-			open(s_pp->argv[s_pp->argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+			open(s_pp->argv[s_pp->argc - 1], \
+			O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (s_pp->argv[s_pp->argc - 2][1] < 0)
 		ft_err(1);
 }

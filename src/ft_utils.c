@@ -52,6 +52,7 @@ void	chk_cmd(t_pipex *s_pp, char *cmd)
 {
 	int		i;
 	int		acss;
+
 	i = 0;
 	acss = 0;
 	while (s_pp->addr[i])

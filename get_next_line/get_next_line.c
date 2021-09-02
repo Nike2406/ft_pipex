@@ -37,6 +37,13 @@ int	chk_rules(char **buf, int fd, char **line)
 	return (1);
 }
 
+void	get_tmp_chr(char **tmp_chr, char **reminder)
+{
+	**tmp_chr = '\0';
+	(*tmp_chr)++;
+	*reminder = ft_strdup(*tmp_chr);
+}
+
 int	get_next_line(int fd, char **line)
 {
 	char		*buf;
@@ -56,9 +63,7 @@ int	get_next_line(int fd, char **line)
 		tmp_chr = ft_strchr(buf, '\n');
 		if (tmp_chr)
 		{
-			*tmp_chr = '\0';
-			tmp_chr++;
-			reminder = ft_strdup(tmp_chr);
+			get_tmp_chr(&tmp_chr, &reminder);
 		}
 		tmp = *line;
 		*line = ft_strjoin(*line, buf);
